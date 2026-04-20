@@ -1,0 +1,6 @@
+papers/*
+!papers/.gitkeep
+script/__pycache__/
+script/*.pyc
+*.zip
+
