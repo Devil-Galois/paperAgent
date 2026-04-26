@@ -1,6 +1,7 @@
 papers/*
 !papers/.gitkeep
+cvs/*
+!cvs/.gitkeep
 script/__pycache__/
 script/*.pyc
 *.zip
-

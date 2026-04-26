@@ -1,23 +1,27 @@
 ---
 name: paper-agent
-description: Plan and write academic papers from a user-provided research topic. Use when the task is to interactively clarify a topic, guide the user's thinking, ask for missing constraints, search authoritative sources, collect literature, organize evidence, draft a paper, revise for lower repetition and lower AIGC-like phrasing, and manage a paper project under paperAgent.
+description: Plan and write academic papers and LaTeX CV/resume projects. Use when the task is to interactively clarify a research topic, collect literature, draft or revise a paper, reduce repetition/AIGC-like phrasing, or when the user asks to create, edit, tailor, or compile a personal CV/resume/academic CV in LaTeX or Overleaf style under paperAgent.
 ---
 
 # Paper Agent
 
-Use this skill when the user wants a research topic turned into a paper project with literature collection, outlining, drafting, revision, and traceable logs.
+Use this skill when the user wants either:
+
+- a research topic turned into a paper project with literature collection, outlining, drafting, revision, and traceable logs
+- a personal CV/resume/academic CV turned into a clean LaTeX project, tailored to a target role, school, lab, scholarship, or research application
 
 ## Scope
 
 This skill works inside `paperAgent/` and should respect the existing directory layout:
 
 - `papers/` for per-topic paper projects
+- `cvs/` for per-person or per-target CV/resume projects
 - `ref/` for reusable references
 - `skills/` for this skill
 - `log/` for task and revision logs
 - `script/` for helper scripts
 
-Do not create new top-level folders under `paperAgent` unless the user explicitly agrees.
+Do not create other new top-level folders under `paperAgent` unless the user explicitly agrees.
 
 ## Core Objective
 
@@ -30,6 +34,17 @@ For each paper-writing task, the agent should:
 5. draft the paper in original language rather than summary stitching
 6. revise for lower repetition and lower AIGC-like phrasing
 7. keep artifacts and logs in the proper project folder
+
+For each CV/resume task, the agent should:
+
+1. understand the target use, audience, language, page length, and constraints
+2. collect or structure the user's raw background without inventing facts
+3. choose an appropriate LaTeX CV style, using Overleaf templates only as design references unless the user requests a named template
+4. write evidence-bearing bullets tailored to the target
+5. create or edit a human-readable `cv.md`
+6. create or edit a portable `cv.tex`
+7. compile to `final-cv.pdf` when a TeX engine is available, or leave clear Overleaf/XeLaTeX instructions when it is not
+8. keep artifacts and logs in the proper project folder
 
 ## Interactive Mode
 
@@ -51,6 +66,8 @@ The interaction should feel like guided academic advising, not like filling out 
 - explain why a question matters when useful
 - adapt the next question to the user's previous answer
 - avoid dumping a rigid questionnaire unless the user explicitly wants a checklist
+
+For CV/resume tasks, use the same interactive style: ask only the details that affect the target version. Do not ask the user to fill a long resume form before creating a useful scaffold.
 
 ## Guided Interview Protocol
 
@@ -186,7 +203,7 @@ Use [../ref/interactive-intake.md](../ref/interactive-intake.md) when building q
 
 ## Required Inputs
 
-Ask for or infer the following when missing:
+For paper-writing tasks, ask for or infer the following when missing:
 
 - research topic
 - target field or venue direction
@@ -209,6 +226,36 @@ Ask for or infer the following when missing:
 If the user gives only a rough topic, start with a scoping brief before drafting.
 
 Do not ask every field if it is not necessary. Infer low-risk defaults and only ask about details that affect literature search, structure, or argument.
+
+For CV/resume tasks, ask for or infer the following when missing:
+
+- target use
+  - academic CV
+  - research internship resume
+  - industry resume
+  - scholarship or lab application
+  - general personal profile
+- output language
+  - Chinese
+  - English
+  - bilingual
+- target field, role, school, lab, company, or program
+- expected length
+  - one page
+  - two pages
+  - complete academic CV
+- template style
+  - classic
+  - compact
+  - modern
+  - academic
+  - let the agent choose
+- whether the CV should include a personal headshot/photo
+- whether ATS friendliness matters
+- whether the user already has source material, old resume, publications, projects, or links
+- whether a local TeX engine or Overleaf should be used
+
+If the user gives only "help me make a CV", first ask for target use, language, page length, template preference, optional headshot/photo, and available source material.
 
 ## Output Policy
 
@@ -233,6 +280,25 @@ For each new topic, create one project folder under `papers/` with this minimum 
 
 Optional files may be added inside that project folder only when the task needs them.
 
+For each new CV/resume target, create one project folder under `cvs/` with this minimum set:
+
+- `intake.md`
+- `brief.md`
+- `cv-data.md`
+- `cv.md`
+- `cv.tex`
+- `notes.md`
+- `final-cv.pdf` when LaTeX compilation is available
+
+Optional files may include:
+
+- `cover-letter.tex`
+- `publications.bib`
+- `resume-ats.tex`
+- `profile-photo.jpg` or `profile-photo.png`
+
+For Chinese or bilingual CVs, default to XeLaTeX and CJK-capable fonts. For English-only industry resumes, prefer simple one-page layouts and avoid icons or complex two-column designs when ATS friendliness matters.
+
 ## Evidence Policy
 
 Prefer sources in this order:
@@ -254,6 +320,83 @@ If evidence is incomplete, mark it explicitly as:
 - hypothesis
 
 ## Main Workflow
+
+Use the paper workflow below for paper-writing tasks. Use the CV workflow below for CV/resume tasks.
+
+## CV/Resume Workflow
+
+### 1. Initialize the CV project
+
+- Create a project folder in `cvs/`
+- Record the request in `log/task-history.md`
+- Write the user interview record to `intake.md`
+- Write the working target to `brief.md`
+- Use `../script/init_cv_project.py` when it saves time; `../script/init_cv_project.ps1` is a PowerShell wrapper for the same initializer
+
+### 2. Run a short CV intake
+
+Ask in a small first batch:
+
+1. What is the target use: academic CV, research internship, industry job, scholarship/lab application, or general profile?
+2. Should the output be Chinese, English, or bilingual?
+3. Should it be one page, two pages, or a complete academic CV?
+4. Which template style should be used: classic, compact, modern, academic, or should the agent choose?
+5. Should it include a personal headshot? If yes, ask for the local image path when needed.
+6. Does the user already have source material, projects, publications, awards, links, or an old resume?
+
+After the answer, ask only target-specific blockers:
+
+- academic CV: research direction, publications, advisor, teaching, grants, service
+- research internship: target lab/topic, methods, projects, publications/preprints, technical skills
+- industry resume: target role, job description, ATS friendliness, measurable project outcomes
+- scholarship/application: selection criteria, required sections, deadline
+
+### 3. Choose a LaTeX style
+
+Use [../ref/cv-latex-guide.md](../ref/cv-latex-guide.md).
+
+Default choices:
+
+- academic CV: clean multi-section layout, complete chronology, publications visible
+- industry resume: compact one-page layout, bullets optimized for screening
+- hybrid research resume: one to two pages, projects and research output first
+
+Built-in LaTeX template choices:
+
+- `classic`: conservative and portable
+- `compact`: one-page ATS-friendly industry resume
+- `modern`: more polished visual style with color accents
+- `academic`: publication/research-oriented CV
+
+Do not copy Overleaf template text verbatim. If adapting a named template, check license and preserve attribution where required.
+
+### 4. Convert raw material into CV content
+
+- Do not invent dates, awards, metrics, papers, affiliations, tools, rankings, or roles
+- Mark unknown facts as `TODO`
+- Produce `cv.md` first as the readable content draft, then convert it into `cv.tex`
+- Rewrite bullets around evidence:
+  - action
+  - method or tool
+  - technical object
+  - measurable or concrete result
+- Remove empty self-evaluation language unless supported by evidence
+
+### 5. Write or edit LaTeX
+
+- Keep `cv.tex` readable and dependency-light
+- Use XeLaTeX for Chinese or bilingual CVs
+- Use simple macros for sections and entries
+- If the user provides a headshot, copy it into the CV project as `profile-photo.*` and reference it from `cv.tex`
+- Avoid photos, icons, sidebars, and text boxes unless the user requests them
+- If ATS friendliness matters, avoid multi-column layouts and decorative elements
+
+### 6. Compile and check
+
+- Compile with `../script/compile_latex_cv.ps1` if a local TeX engine is available
+- If local TeX is unavailable, tell the user to compile `cv.tex` on Overleaf with XeLaTeX
+- Check that names, dates, links, page breaks, section order, and TODO markers are correct
+- Append a short revision log entry
 
 ### 1. Initialize the project
 
@@ -456,6 +599,16 @@ Contains:
 
 Contains raw literature notes, open questions, and evidence fragments.
 
+### CV project files
+
+`cv-data.md` contains structured source material and unresolved TODOs.
+
+`cv.md` contains the readable resume/CV draft and should be easy for the user to review before LaTeX formatting.
+
+`cv.tex` contains the editable LaTeX CV source.
+
+`final-cv.pdf` contains the compiled CV deliverable when compilation succeeds.
+
 ## References
 
 Read these files as needed:
@@ -465,5 +618,6 @@ Read these files as needed:
 - [../ref/citation-style.md](../ref/citation-style.md)
 - [../ref/source-priority.md](../ref/source-priority.md)
 - [../ref/quality-checklist.md](../ref/quality-checklist.md)
+- [../ref/cv-latex-guide.md](../ref/cv-latex-guide.md)
 
 Use scripts under `../script/` when they reduce repeated manual work.
