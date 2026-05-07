@@ -6,22 +6,22 @@ A self-contained Codex skill for academic paper writing and LaTeX CV/resume gene
 
 ```
 paper-agent/
-├── SKILL.md              # Main skill definition (Codex entry point)
-├── ref/                  # Reference documents
-│   ├── citation-style.md
-│   ├── cv-latex-guide.md
-│   ├── interactive-intake.md
-│   ├── paper-template.md
-│   ├── quality-checklist.md
-│   └── source-priority.md
-└── script/               # Helper scripts
-    ├── build_search_queries.py
-    ├── compile_latex_cv.ps1
-    ├── export_final_docx.py
-    ├── init_cv_project.ps1
-    ├── init_cv_project.py
-    ├── init_paper_project.ps1
-    └── open_chrome_search.ps1
+|-- SKILL.md              # Main skill definition (Codex entry point)
+|-- ref/                  # Reference documents
+|   |-- citation-style.md
+|   |-- cv-latex-guide.md
+|   |-- interactive-intake.md
+|   |-- paper-template.md
+|   |-- quality-checklist.md
+|   `-- source-priority.md
+`-- script/               # Helper scripts
+    |-- build_search_queries.py
+    |-- compile_latex_cv.ps1
+    |-- export_final_docx.py
+    |-- init_cv_project.ps1
+    |-- init_cv_project.py
+    |-- init_paper_project.ps1
+    `-- open_chrome_search.ps1
 ```
 
 ## Installation
@@ -59,6 +59,8 @@ Or use Codex CLI if available:
 codex skills install ./paper-agent
 ```
 
+Do not install files from the repository-level `skills/` directory. The installable skill package is the `paper-agent/` directory.
+
 ## Health Check
 
 Before using the skill, verify the installation:
@@ -75,7 +77,7 @@ Before using the skill, verify the installation:
    - `script/export_final_docx.py`
    - `script/init_cv_project.py`
    - `script/compile_latex_cv.ps1`
-4. **No broken relative paths**: SKILL.md should reference `ref/xxx` and `script/xxx` (not `../ref/` or `../script/`)
+4. **No broken relative paths**: `SKILL.md` should reference `ref/xxx` and `script/xxx` (not `../ref/` or `../script/`)
 
 Run this quick check (PowerShell):
 ```powershell

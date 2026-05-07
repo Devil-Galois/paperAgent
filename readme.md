@@ -32,9 +32,9 @@
 - `ref/`
   - 放置长期复用的参考资料
   - 包括：论文模板、引用规范、交互提问指引、来源优先级、质量检查表、LaTeX CV 指南
-- `skills/`
-  - 放置给 Agent 阅读的 skill
-  - 当前核心入口文件：`SKILL.md`
+- `paper-agent/`
+  - 自包含 Codex skill 包
+  - 当前核心入口文件：`paper-agent/SKILL.md`
 - `log/`
   - 放任务日志、改稿日志、决策记录
 - `script/`
@@ -106,7 +106,7 @@
 
 ## 工程边界
 
-- 默认只使用当前已有一级目录：`papers`、`cvs`、`ref`、`skills`、`log`、`script`
+- 默认只使用当前已有一级目录：`papers`、`cvs`、`ref`、`paper-agent`、`log`、`script`
 - 如需新增目录，应先征询用户意见
 - 中间工作文件优先使用 `md`
 - 论文最终交付默认包含 `final-manuscript.docx`；CV 最终交付默认包含 `cv.md`、`cv.tex`，本地 TeX 可用时包含 `final-cv.pdf`
@@ -134,7 +134,7 @@
 
 ## 当前关键文件
 
-- Skill 入口：[skills/SKILL.md](skills/SKILL.md)
+- Skill 入口：[paper-agent/SKILL.md](paper-agent/SKILL.md)
 - 交互提问指南：[ref/interactive-intake.md](ref/interactive-intake.md)
 - 论文模板：[ref/paper-template.md](ref/paper-template.md)
 - 引用规范：[ref/citation-style.md](ref/citation-style.md)
@@ -150,7 +150,7 @@
 
 如果需要将 `paperAgent` 公开发布：
 
-- 保留 `skills/`、`ref/`、`script/`、`readme.md`
+- 保留 `paper-agent/`、`ref/`、`script/`、`readme.md`
 - 保留 `papers/` 与 `cvs/` 目录本身，但不要公开其中真实论文工程、简历内容或头像图片
 - `log/` 建议只保留模板，不保留具体用户任务记录
 - 推荐配合 `.gitignore` 一起发布，避免后续把本地论文工程和缓存文件误提交
