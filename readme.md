@@ -154,3 +154,32 @@
 - 保留 `papers/` 与 `cvs/` 目录本身，但不要公开其中真实论文工程、简历内容或头像图片
 - `log/` 建议只保留模板，不保留具体用户任务记录
 - 推荐配合 `.gitignore` 一起发布，避免后续把本地论文工程和缓存文件误提交
+
+## Codex Skill 安装
+
+`paperAgent` 已打包为自包含的 Codex skill，位于 `paper-agent/` 目录。
+
+### 安装步骤
+
+**Windows:**
+```powershell
+# 复制 paper-agent 目录到 Codex skills 目录
+Copy-Item -Recurse .\paper-agent $env:USERPROFILE\.codex\skills\
+```
+
+**macOS / Linux:**
+```bash
+# 复制 paper-agent 目录到 Codex skills 目录
+cp -r ./paper-agent ~/.codex/skills/
+```
+
+### 验证安装
+
+确保以下结构存在：
+```
+~/.codex/skills/paper-agent/SKILL.md
+~/.codex/skills/paper-agent/ref/
+~/.codex/skills/paper-agent/script/
+```
+
+详细安装说明请参阅 [paper-agent/README.md](paper-agent/README.md)。
