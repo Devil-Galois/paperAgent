@@ -12,16 +12,15 @@ Use this skill when the user wants either:
 
 ## Scope
 
-This skill works inside `paperAgent/` and should respect the existing directory layout:
+This skill is self-contained. Its reference files live in `ref/`, and helper scripts live in `script/` inside the installed skill directory.
+
+For user work, create artifacts in the user's current workspace unless the user specifies another project root:
 
 - `papers/` for per-topic paper projects
 - `cvs/` for per-person or per-target CV/resume projects
-- `ref/` for reusable references
-- `skills/` for this skill
 - `log/` for task and revision logs
-- `script/` for helper scripts
 
-Do not create other new top-level folders under `paperAgent` unless the user explicitly agrees.
+Do not create other new top-level folders in the user's workspace unless the user explicitly agrees.
 
 ## Core Objective
 
