@@ -1,4 +1,4 @@
-# paperAgent
+# paperAgent (readme.md 文件全部由 qwen-coder 生成)
 
 > A Codex skill for research paper writing, literature-grounded drafting, and LaTeX CV generation.
 
